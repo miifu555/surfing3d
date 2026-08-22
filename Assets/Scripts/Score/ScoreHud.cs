@@ -1,3 +1,4 @@
+using Surfing3D.UI;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,7 +6,7 @@ namespace Surfing3D.Scoring
 {
     /// <summary>
     /// スコアを画面に表示する簡易 HUD。
-    /// ラベルを割り当てていない場合は実行時に Canvas ごと自動生成する。
+    /// ラベルを割り当てていない場合は実行時に自動生成する。
     /// </summary>
     [DisallowMultipleComponent]
     [AddComponentMenu("Surfing3D/Score HUD")]
@@ -22,7 +23,7 @@ namespace Surfing3D.Scoring
         [SerializeField] string m_Format = "SCORE {0}";
 
         [Header("Options")]
-        [Tooltip("ラベル未設定のときに Canvas を自動生成する")]
+        [Tooltip("ラベル未設定のときに UI を自動生成する")]
         [SerializeField] bool m_CreateUIIfMissing = true;
 
         [Tooltip("加算ポップアップの表示時間（秒）")]
@@ -30,11 +31,10 @@ namespace Surfing3D.Scoring
 
         ScoreManager m_Manager;
         float m_PopupTimer;
-        GameObject m_RuntimeCanvas;
 
         void OnEnable()
         {
-            if (m_CreateUIIfMissing && (m_ScoreLabel == null || m_PopupLabel == null))
+            if (m_CreateUIIfMissing)
             {
                 BuildRuntimeUI();
             }
@@ -55,15 +55,6 @@ namespace Surfing3D.Scoring
             {
                 m_Manager.ScoreChanged -= HandleScoreChanged;
                 m_Manager = null;
-            }
-        }
-
-        void OnDestroy()
-        {
-            if (m_RuntimeCanvas != null)
-            {
-                Destroy(m_RuntimeCanvas);
-                m_RuntimeCanvas = null;
             }
         }
 
@@ -115,61 +106,29 @@ namespace Surfing3D.Scoring
 
         void BuildRuntimeUI()
         {
-            m_RuntimeCanvas = new GameObject("Score HUD Canvas", typeof(RectTransform));
-
-            var canvas = m_RuntimeCanvas.AddComponent<Canvas>();
-            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvas.sortingOrder = 100;
-
-            var scaler = m_RuntimeCanvas.AddComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1920f, 1080f);
-            scaler.matchWidthOrHeight = 0.5f;
-
-            m_RuntimeCanvas.AddComponent<GraphicRaycaster>();
-
-            var font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-
             if (m_ScoreLabel == null)
             {
-                m_ScoreLabel = CreateLabel("Score Label", m_RuntimeCanvas.transform, font, 48, new Vector2(0f, -24f));
+                m_ScoreLabel = HudCanvas.CreateLabel(
+                    "Score Label",
+                    new Vector2(0.5f, 1f),
+                    new Vector2(0f, -24f),
+                    new Vector2(600f, 70f),
+                    48,
+                    TextAnchor.MiddleCenter);
             }
 
             if (m_PopupLabel == null)
             {
-                m_PopupLabel = CreateLabel("Score Popup", m_RuntimeCanvas.transform, font, 36, new Vector2(0f, -80f));
+                m_PopupLabel = HudCanvas.CreateLabel(
+                    "Score Popup",
+                    new Vector2(0.5f, 1f),
+                    new Vector2(0f, -80f),
+                    new Vector2(600f, 70f),
+                    36,
+                    TextAnchor.MiddleCenter);
                 m_PopupLabel.color = new Color(1f, 0.92f, 0.4f, 0f);
                 m_PopupLabel.text = string.Empty;
             }
-        }
-
-        static Text CreateLabel(string name, Transform parent, Font font, int fontSize, Vector2 anchoredPosition)
-        {
-            var go = new GameObject(name, typeof(RectTransform));
-            go.transform.SetParent(parent, false);
-
-            var rect = go.GetComponent<RectTransform>();
-            rect.anchorMin = new Vector2(0.5f, 1f);
-            rect.anchorMax = new Vector2(0.5f, 1f);
-            rect.pivot = new Vector2(0.5f, 1f);
-            rect.sizeDelta = new Vector2(600f, 70f);
-            rect.anchoredPosition = anchoredPosition;
-
-            var text = go.AddComponent<Text>();
-            text.font = font;
-            text.fontSize = fontSize;
-            text.fontStyle = FontStyle.Bold;
-            text.alignment = TextAnchor.MiddleCenter;
-            text.color = Color.white;
-            text.raycastTarget = false;
-            text.horizontalOverflow = HorizontalWrapMode.Overflow;
-            text.verticalOverflow = VerticalWrapMode.Overflow;
-
-            var shadow = go.AddComponent<Outline>();
-            shadow.effectColor = new Color(0f, 0f, 0f, 0.6f);
-            shadow.effectDistance = new Vector2(2f, -2f);
-
-            return text;
         }
     }
 }

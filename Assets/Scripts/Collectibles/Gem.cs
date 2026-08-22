@@ -131,28 +131,12 @@ namespace Surfing3D.Collectibles
 
         void OnTriggerEnter(Collider other)
         {
-            if (m_Collected || !IsCollector(other))
+            if (m_Collected || !TriggerFilter.Matches(other, m_CollectorTag))
             {
                 return;
             }
 
             Collect();
-        }
-
-        bool IsCollector(Collider other)
-        {
-            if (string.IsNullOrEmpty(m_CollectorTag))
-            {
-                return true;
-            }
-
-            if (other.CompareTag(m_CollectorTag))
-            {
-                return true;
-            }
-
-            var body = other.attachedRigidbody;
-            return body != null && body.CompareTag(m_CollectorTag);
         }
 
         /// <summary>宝石を取得させる（スクリプトから直接呼んでもよい）。</summary>
