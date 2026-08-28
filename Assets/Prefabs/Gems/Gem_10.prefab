@@ -162,7 +162,8 @@ MonoBehaviour:
   m_SpinSpeed: 90
   m_BobAmplitude: 0.12
   m_BobSpeed: 1.6
-  m_CollectEffect: {fileID: 0}
+  m_CollectEffect: {fileID: 6200001, guid: d7f9b067cf5e4fd781a1821fa94b0a59, type: 3}
+  m_EffectLifetime: 2
   m_CollectSound: {fileID: 0}
   m_CollectVolume: 1
   m_OnCollected:

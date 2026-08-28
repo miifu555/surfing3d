@@ -62,6 +62,9 @@ namespace Surfing3D.Collectibles
         [Tooltip("取得時に生成するエフェクト（任意）")]
         [SerializeField] GameObject m_CollectEffect;
 
+        [Tooltip("エフェクトを消すまでの秒数。0 以下なら自動では消さない")]
+        [SerializeField] float m_EffectLifetime = 2f;
+
         [Tooltip("取得時に鳴らす効果音（任意）")]
         [SerializeField] AudioClip m_CollectSound;
 
@@ -100,6 +103,7 @@ namespace Surfing3D.Collectibles
             m_RespawnDelay = Mathf.Max(0f, m_RespawnDelay);
             m_BobAmplitude = Mathf.Max(0f, m_BobAmplitude);
             m_CustomScore = Mathf.Max(0, m_CustomScore);
+            m_EffectLifetime = Mathf.Max(0f, m_EffectLifetime);
         }
 
         void Awake()
@@ -160,7 +164,7 @@ namespace Surfing3D.Collectibles
 
             if (m_CollectEffect != null)
             {
-                Instantiate(m_CollectEffect, transform.position, Quaternion.identity);
+                SpawnCollectEffect();
             }
 
             if (m_RespawnDelay > 0f)
@@ -181,6 +185,49 @@ namespace Surfing3D.Collectibles
             transform.position = m_BasePosition;
             SetActiveVisuals(true);
             m_Collected = false;
+        }
+
+        void SpawnCollectEffect()
+        {
+            var effect = Instantiate(m_CollectEffect, transform.position, Quaternion.identity);
+
+            // 宝石と同じ色の破片が飛ぶようにする
+            if (effect.TryGetComponent<GemCollectEffect>(out var burst))
+            {
+                burst.SetColor(GetGemColor());
+            }
+
+            if (m_EffectLifetime > 0f)
+            {
+                Destroy(effect, m_EffectLifetime);
+            }
+        }
+
+        Color GetGemColor()
+        {
+            if (m_Renderers != null)
+            {
+                for (int i = 0; i < m_Renderers.Length; i++)
+                {
+                    var material = m_Renderers[i] != null ? m_Renderers[i].sharedMaterial : null;
+                    if (material == null)
+                    {
+                        continue;
+                    }
+
+                    if (material.HasProperty("_BaseColor"))
+                    {
+                        return material.GetColor("_BaseColor");
+                    }
+
+                    if (material.HasProperty("_Color"))
+                    {
+                        return material.color;
+                    }
+                }
+            }
+
+            return Color.white;
         }
 
         void SetActiveVisuals(bool value)

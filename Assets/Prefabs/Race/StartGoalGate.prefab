@@ -99,7 +99,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Tape: {fileID: 6100033}
   m_TapeRespawnDelay: 1.2
-  m_ShowTapeEveryLap: 0
+  m_ShowGoalTape: 1
   m_PlayerTag: Player
   m_RetriggerCooldown: 3
 --- !u!1 &6100011

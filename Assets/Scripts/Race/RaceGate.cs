@@ -4,8 +4,8 @@ namespace Surfing3D.Race
 {
     /// <summary>
     /// スタート兼ゴールのゲート。
-    /// 最初の通過でレース開始（スタートテープが切れる）、以降は通過するたびに 1 周としてカウントし、
-    /// 最終ラップに入るとゴールテープとしてもう一度テープが張られる。
+    /// 最初の通過で制限時間のカウントダウンが始まり、そのときテープが切れる。
+    /// そのあとゴールテープとして張り直され、次に通過するとゴール（ボーナススコア）になる。
     /// </summary>
     [RequireComponent(typeof(Collider))]
     [DisallowMultipleComponent]
@@ -16,11 +16,11 @@ namespace Surfing3D.Race
         [Tooltip("スタート／ゴールのテープ")]
         [SerializeField] GoalTape m_Tape;
 
-        [Tooltip("テープを張り直すまでの待ち時間（秒）")]
+        [Tooltip("スタート後、ゴールテープを張り直すまでの待ち時間（秒）")]
         [SerializeField] float m_TapeRespawnDelay = 1.2f;
 
-        [Tooltip("ON にすると毎ラップ、OFF なら最終ラップだけテープを張り直す")]
-        [SerializeField] bool m_ShowTapeEveryLap = false;
+        [Tooltip("OFF にするとスタート後にテープを張り直さない")]
+        [SerializeField] bool m_ShowGoalTape = true;
 
         [Header("Detection")]
         [Tooltip("通過を判定するタグ。空文字なら何が通っても判定する")]
@@ -71,41 +71,35 @@ namespace Surfing3D.Race
             }
 
             var race = RaceManager.Ensure();
-            if (race.State == RaceState.Finished)
+
+            switch (race.State)
             {
-                return;
+                case RaceState.Ready:
+                    m_LastPassTime = Time.time;
+                    race.StartRace();
+
+                    if (m_Tape != null)
+                    {
+                        m_Tape.Break();
+
+                        // 一度切れたテープを、今度はゴールテープとして張り直す
+                        if (m_ShowGoalTape)
+                        {
+                            m_Tape.ShowAfter(m_TapeRespawnDelay);
+                        }
+                    }
+                    break;
+
+                case RaceState.Racing:
+                    m_LastPassTime = Time.time;
+                    race.ReachGoal();
+
+                    if (m_Tape != null)
+                    {
+                        m_Tape.Break();
+                    }
+                    break;
             }
-
-            m_LastPassTime = Time.time;
-
-            if (race.State == RaceState.Ready)
-            {
-                race.StartRace();
-            }
-            else
-            {
-                race.CompleteLap();
-            }
-
-            if (m_Tape != null)
-            {
-                m_Tape.Break();
-
-                if (ShouldShowTape(race))
-                {
-                    m_Tape.ShowAfter(m_TapeRespawnDelay);
-                }
-            }
-        }
-
-        bool ShouldShowTape(RaceManager race)
-        {
-            if (race.State != RaceState.Racing)
-            {
-                return false;
-            }
-
-            return m_ShowTapeEveryLap || race.IsFinalLap;
         }
     }
 }

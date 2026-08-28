@@ -59,8 +59,19 @@ ScoreManager.Ensure().ScoreChanged += (total, delta) => Debug.Log($"{total} (+{d
 | `Collector Tag` | 取得できる側のタグ。既定は `Player`、空文字なら誰でも取得可 |
 | `Respawn Delay` | 0 より大きいと、その秒数後に復活する（0 なら取得時に消滅） |
 | `Spin Speed` / `Bob Amplitude` / `Bob Speed` | 回転速度と上下の揺れ |
-| `Collect Effect` / `Collect Sound` | 取得時のエフェクトと効果音（任意） |
+| `Collect Effect` / `Collect Sound` | 取得時のエフェクトと効果音 |
+| `Effect Lifetime` | エフェクトを消すまでの秒数（既定 2 秒。0 以下なら自動では消さない） |
 | `On Collected` | 取得時に呼ばれる UnityEvent（引数は加算スコア） |
+
+## 取得エフェクト
+
+宝石を取ると、`Assets/Prefabs/Effects/GemCollectEffect.prefab` が生成され、宝石と同じ色の破片が飛び散ります。
+破片は落下しながら縮んでいき、**2 秒経つとエフェクトごと消えます**。
+
+- 破片はパーティクルではなくコードから生成しているので、パーティクル素材の用意は要りません
+- 色は取った宝石のマテリアルから自動で受け取るので、10 点なら緑、150 点ならピンクの破片になります
+- 数・速さ・重力・寿命は `GemCollectEffect` のインスペクタで調整できます
+- 消えるまでの秒数は 2 か所で決まります。エフェクト側の `Lifetime` が見た目の長さ、`Gem` 側の `Effect Lifetime` が後始末の保険です（どちらも既定 2 秒）
 
 ## 補足
 

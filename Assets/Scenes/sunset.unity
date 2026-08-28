@@ -1839,7 +1839,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5ba02136f6c4e0dbcbc80e903f8a8a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TotalLaps: 3
+  m_TimeLimit: 90
+  m_GoalBonus: 1000
+  m_HurryUpTime: 10
   m_PersistAcrossScenes: 0
 --- !u!114 &900000006
 MonoBehaviour:
@@ -1853,12 +1855,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53112e31210a4472b208d520495a8b86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_LapLabel: {fileID: 0}
+  m_TimeLabel: {fileID: 0}
   m_MessageLabel: {fileID: 0}
-  m_LapFormat: 'LAP {0}/{1}'
+  m_TimeFormat: 'TIME {0}'
+  m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+  m_HurryColor: {r: 1, g: 0.35, b: 0.3, a: 1}
   m_StartMessage: GO!
-  m_FinalLapMessage: FINAL LAP!
-  m_FinishMessage: FINISH!
+  m_HurryMessage: HURRY UP!
+  m_GoalMessage: 'GOAL!  +{0}'
+  m_TimeUpMessage: TIME UP!
   m_MessageDuration: 2
   m_CreateUIIfMissing: 1
 --- !u!1001 &900000110
