@@ -4,7 +4,7 @@ using TMPro;
 
 public class RaceCountdown : MonoBehaviour
 {
-    // カウントダウンが終わるまで false。debugmover はこれを見て動きを止める。
+    // カウントダウンが終わるまで false。serialmover はこれを見て動きを止める。
     // このコンポーネントが無いシーンでも動かせるよう、初期値は true にしてある。
     public static bool raceStarted = true;
 
@@ -22,10 +22,22 @@ public class RaceCountdown : MonoBehaviour
     // 「GO!」を表示しておく秒数。この時間が過ぎたらオブジェクトを消す
     public float goDisplayTime = 1.0f;
 
+    [Header("音")]
+    // 「GO!」の瞬間に鳴らすスタート音
+    public AudioClip startSound;
+    [Range(0.0f, 1.0f)]
+    public float startSoundVolume = 1.0f;
+
     [Header("後始末")]
     // カウントが終わったあとに消すオブジェクト。
     // 未設定ならテキストが乗っているGameObjectを消す。
     public GameObject destroyTarget;
+    // 破棄せず非表示にするだけにする。
+    // スタートテープをゴールテープとして使い回すので既定は true。
+    public bool hideInsteadOfDestroy = true;
+    // カウントダウンの文字も一緒に消す。
+    // false にすると「GO!」が出たまま残る。
+    public bool hideCountdownText = true;
 
     void Awake()
     {
@@ -52,6 +64,8 @@ public class RaceCountdown : MonoBehaviour
         SetText(goText);
         raceStarted = true;
 
+        SoundPlayer.Play(startSound, startSoundVolume, 0.0f);
+
         yield return new WaitForSeconds(goDisplayTime);
 
         DestroyCountdownObject();
@@ -65,7 +79,7 @@ public class RaceCountdown : MonoBehaviour
         }
     }
 
-    // 表示に使ったオブジェクトごと消す
+    // 表示に使ったオブジェクトごと片付ける
     void DestroyCountdownObject()
     {
         GameObject target = destroyTarget;
@@ -75,7 +89,26 @@ public class RaceCountdown : MonoBehaviour
             target = countdownTextField.gameObject;
         }
 
-        if (target != null)
+        Cleanup(target);
+
+        // destroyTarget にテープを指定している場合、数字のテキストは別に残るので消す
+        if (hideCountdownText && countdownTextField != null &&
+            countdownTextField.gameObject != target)
+        {
+            Cleanup(countdownTextField.gameObject);
+        }
+    }
+
+    void Cleanup(GameObject target)
+    {
+        if (target == null) return;
+
+        if (hideInsteadOfDestroy)
+        {
+            // RaceManager があとでゴールテープとして出し直すので破棄しない
+            target.SetActive(false);
+        }
+        else
         {
             Destroy(target);
         }

@@ -48,9 +48,38 @@ public class GemSpawner : MonoBehaviour
     // 生成した宝石をまとめる親（スケール1で作る）
     private Transform container;
 
+    // 生成した宝石。置き直すときにまとめて消すために覚えておく
+    private readonly List<GameObject> spawned = new List<GameObject>();
+
     void Start()
     {
         Spawn();
+    }
+
+    // 今ある宝石を消してから、改めてランダムに配置し直す
+    public void Respawn()
+    {
+        ClearSpawned();
+        Spawn();
+    }
+
+    // 生成済みの宝石をすべて片付ける
+    public void ClearSpawned()
+    {
+        for (int i = 0; i < spawned.Count; i++)
+        {
+            if (spawned[i] == null)
+            {
+                continue;
+            }
+
+            // Destroy はフレーム終わりまで残るので、先に消しておく
+            spawned[i].SetActive(false);
+            Destroy(spawned[i]);
+        }
+
+        spawned.Clear();
+        placed.Clear();
     }
 
     public void Spawn()
@@ -94,6 +123,7 @@ public class GemSpawner : MonoBehaviour
                     instance.transform.localScale = entry.prefab.transform.localScale;
 
                     placed.Add(position);
+                    spawned.Add(instance);
                 }
                 else
                 {

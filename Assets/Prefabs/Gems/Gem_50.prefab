@@ -146,3 +146,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EXPmover
   moveSpeed: 15
   getpoint: 50
+  attractRadius: 2
+  pickupSound: {fileID: 8300000, guid: ad05db26986205742826e8bb884a3bbf, type: 3}
+  soundVolume: 0.12
+  pitchVariation: 0
+  pickupEffectPrefab: {fileID: 7967665963804198749, guid: fd0390093745f634fa7040ef44ecd94e, type: 3}
+  effectLifeTime: 2
+  tintEffectWithGemColor: 1

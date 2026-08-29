@@ -16,12 +16,19 @@ public class ScoreMan : MonoBehaviour
     {
         // インスペクターで設定した値を static 変数にコピー
         scoretext = scoretextField;
+
+        // static はシーンを移っても値が残るので、ここでリセットする。
+        // これが無いとタイトルからやり直しても前回のスコアが残ってしまう。
+        score = 0;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        scoretext.text = "Score:0";
+        if (scoretext != null)
+        {
+            scoretext.text = "Score:0";
+        }
     }
 
     // Update is called once per frame
@@ -33,6 +40,10 @@ public class ScoreMan : MonoBehaviour
     public static void getScore(int gotscore)
     {
         score += gotscore;
-        scoretext.text = "Score:" + score.ToString();
+
+        if (scoretext != null)
+        {
+            scoretext.text = "Score:" + score.ToString();
+        }
     }
 }

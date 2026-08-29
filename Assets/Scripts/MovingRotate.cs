@@ -47,8 +47,14 @@ public class MovingRotate : MonoBehaviour
     // 親（ボード）の移動・旋回が確定したあとに姿勢を決めたいので LateUpdate
     void LateUpdate()
     {
+        // 操作量は mover から受け取る。
+        // キーを直接見ていると micro:bit で操作したときに傾かないため。
         float input = 0.0f;
-        if (Input.GetKey(KeyCode.A))
+        if (serialmover.Active != null)
+        {
+            input = serialmover.Active.SteerInput;
+        }
+        else if (Input.GetKey(KeyCode.A))
         {
             input = -1.0f;
         }

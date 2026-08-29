@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/title.unity
+    guid: a1e3e6a5032e20f43af8989a0c0237e9
+  - enabled: 1
     path: Assets/Scenes/sunset.unity
     guid: 99c9720ab356a0642a771bea13969a05
   m_configObjects:
