@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d84c6bb393ac9d4e90a824434dab30f, type: 3}
+  m_Name: "\u30B9\u30C8\u30FC\u30E0\u30A6\u30A3\u30F3\u30B0"
+  m_EditorClassIdentifier: FigureBattle::FigureBattle.FigureData
+  spec:
+    figureName: "\u30B9\u30C8\u30FC\u30E0\u30A6\u30A3\u30F3\u30B0"
+    figureClass: 2
+    rarity: 2
+    power: 2500
+    life: 2000
+    range: 2
+    cost: 2
+    modelPrefab: {fileID: 0}
