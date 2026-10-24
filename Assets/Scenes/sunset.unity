@@ -8496,7 +8496,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4831a83530d6c6a4ea5acb87943b6762, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RaceManager
-  timeLimit: 60
+  timeLimit: 90
   statusTextField: {fileID: 2142153158}
   goalTape: {fileID: 1598801542}
   playerTransform: {fileID: 543450652026495568}
@@ -8561,6 +8561,11 @@ MonoBehaviour:
   useKeys: 1
   retryKey: 32
   titleKey: 27
+  useMicrobit: 1
+  titleButtonMarks:
+  - A
+  - B
+  microbitInputDelay: 0.5
 --- !u!114 &900000007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11060,7 +11065,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1098037887
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11781,7 +11786,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: TITLE
+  m_text: Press any button
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -22228,7 +22233,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbf9017056a90004992f1378769e1220, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::reciever
-  portName: COM3
+  portName: COM4
   baudRate: 115200
   autoDetectPort: 1
   detectTimeout: 3
@@ -22283,7 +22288,7 @@ MonoBehaviour:
   acceleration: 5
   deceleration: 8
   reverseSpeedFactor: 0.5
-  corneringSpeedFactor: 0.851
+  corneringSpeedFactor: 0.671
   currentSpeed: 0
 --- !u!1 &1038482410672952430 stripped
 GameObject:

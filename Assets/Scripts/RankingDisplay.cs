@@ -17,9 +17,40 @@ public class RankingDisplay : MonoBehaviour
     // まだ記録が無い行に出す文字
     public string emptyMark = "- - -";
 
+    [Header("記録の消去")]
+    // キーを押して保存済みの記録を消せるようにするか
+    public bool allowClearKey = true;
+    // 記録を消すキー
+    public KeyCode clearKey = KeyCode.C;
+    // 消したときに Console へ知らせるか
+    public bool logOnClear = true;
+
     void OnEnable()
     {
         Refresh();
+    }
+
+    void Update()
+    {
+        if (allowClearKey == false) return;
+
+        if (Input.GetKeyDown(clearKey))
+        {
+            ClearRanking();
+        }
+    }
+
+    // 保存されている記録をすべて消して、表示を更新する。
+    // ボタンの OnClick からも呼べるように public にしている。
+    public void ClearRanking()
+    {
+        ScoreRanking.Clear();
+        Refresh();
+
+        if (logOnClear)
+        {
+            Debug.Log("RankingDisplay: ランキングの記録を消しました", this);
+        }
     }
 
     public void Refresh()

@@ -40,10 +40,20 @@ public class ResultScreen : MonoBehaviour
     public KeyCode retryKey = KeyCode.Space;
     public KeyCode titleKey = KeyCode.Escape;
 
+    [Header("micro:bit 操作")]
+    public bool useMicrobit = true;
+    // タイトルへ戻すボタン。ここに並べたどれかを押すと戻る
+    public string[] titleButtonMarks = new string[] { "A", "B" };
+    // リザルトが出てから何秒間、ボタンを受け付けないか。
+    // 走行中に押していたボタンでそのまま戻ってしまうのを防ぐ
+    public float microbitInputDelay = 0.5f;
+
     // リザルトを出したあとか
     private bool shown = false;
     // シーンの二重読み込み防止
     private bool loading = false;
+
+    private MicrobitButton titleButton;
 
     void Awake()
     {
@@ -60,6 +70,10 @@ public class ResultScreen : MonoBehaviour
     public void Show(int score, int goalCount)
     {
         shown = true;
+
+        // 走行中ずっと押していたボタンで即座に戻らないよう、
+        // リザルトが出たこの瞬間から数え直す
+        titleButton = new MicrobitButton(microbitInputDelay);
 
         if (scoreText != null)
         {
@@ -104,14 +118,24 @@ public class ResultScreen : MonoBehaviour
     void Update()
     {
         if (shown == false) return;
-        if (useKeys == false) return;
         if (loading) return;
 
-        if (Input.GetKeyDown(retryKey))
+        if (useKeys)
         {
-            Retry();
+            if (Input.GetKeyDown(retryKey))
+            {
+                Retry();
+                return;
+            }
+
+            if (Input.GetKeyDown(titleKey))
+            {
+                BackToTitle();
+                return;
+            }
         }
-        else if (Input.GetKeyDown(titleKey))
+
+        if (useMicrobit && titleButton != null && titleButton.GetDownAny(titleButtonMarks))
         {
             BackToTitle();
         }

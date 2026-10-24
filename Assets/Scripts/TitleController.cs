@@ -12,21 +12,43 @@ public class TitleController : MonoBehaviour
     public bool startWithKey = true;
     public KeyCode[] startKeys = new KeyCode[] { KeyCode.Space, KeyCode.Return, KeyCode.KeypadEnter };
 
+    [Header("micro:bit でも始める")]
+    public bool startWithMicrobit = true;
+    // 使うボタン。ここに並べたどれかが押されたら始まる
+    public string[] startButtonMarks = new string[] { "A", "B" };
+    // 画面が出てから何秒間、ボタンを受け付けないか。
+    // 前の画面で押していたボタンでそのまま始まってしまうのを防ぐ
+    public float microbitInputDelay = 0.5f;
+
     // 二重に読み込まないための番人
     private bool loading = false;
 
+    private MicrobitButton startButton;
+
+    void Start()
+    {
+        startButton = new MicrobitButton(microbitInputDelay);
+    }
+
     void Update()
     {
-        if (startWithKey == false) return;
         if (loading) return;
 
-        for (int i = 0; i < startKeys.Length; i++)
+        if (startWithKey)
         {
-            if (Input.GetKeyDown(startKeys[i]))
+            for (int i = 0; i < startKeys.Length; i++)
             {
-                LoadGameScene();
-                return;
+                if (Input.GetKeyDown(startKeys[i]))
+                {
+                    LoadGameScene();
+                    return;
+                }
             }
+        }
+
+        if (startWithMicrobit && startButton != null && startButton.GetDownAny(startButtonMarks))
+        {
+            LoadGameScene();
         }
     }
 
